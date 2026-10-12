@@ -218,8 +218,18 @@ export class Visualizer {
     ctx.globalCompositeOperation = 'source-over';
 
     const m = Math.min(w, h);
-    const cx = w * 0.5;
-    const cy = h * 0.36;
+    // Centre the scene on the Tune-in orb (in CSS px, same space as w/h) so the
+    // sun and spectrum ring sit behind it at any viewport size or scroll position.
+    let cx = w * 0.5;
+    let cy = h * 0.36;
+    const orb = (this._orb ??= document.getElementById('tune'));
+    if (orb) {
+      const r = orb.getBoundingClientRect();
+      if (r.width) {
+        cx = r.left + r.width / 2;
+        cy = r.top + r.height / 2;
+      }
+    }
 
     // --- aurora (behind everything else) ---
     const aur = smooth(2.6, 6.6, cur.kp);
